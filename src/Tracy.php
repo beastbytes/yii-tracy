@@ -76,6 +76,8 @@ class Tracy
     }
 
     /**
+     * Add panels to the bar
+     *
      * @param array $panels
      * @psalm-param array<string, array> $panels
      * @param Bar $bar
@@ -89,7 +91,13 @@ class Tracy
         $factory = new Factory($this->container);
 
         foreach ($panels as $id => $config) {
-            $bar->addPanel($factory->create($config), $id);
+            $bar->addPanel(
+                $factory
+                    ->create($config)
+                    ->setContainer($this->container)
+                ,
+                $id
+            );
         }
     }
 }
