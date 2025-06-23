@@ -54,11 +54,40 @@ Provides information about the session.
 Provides information about the rendered view.
 
 ## User Defined Panel
-To define a panel for Tracy create a class that extends `BeastBytes\Yii\Tracy\Panel\Panel` 
-and implements `Tracy\IBarPanel`, and add its configuration to `'beastbytes/yii-tracy'['panels']`. 
+### Panel Class
+The Panel class must extend `BeastBytes\Yii\Tracy\Panel\Panel`. 
+The Panel class has access to Yii's Dependency Injection container through the `$container` property.
+
+To add the panel to Tracy, add its configuration to `'beastbytes/yii-tracy'['panels']`.
 
 See [Tracy Bar Extensions](https://tracy.nette.org/en/extensions) for more information
-and examine the packages panels for example code.
+and examine the package's panels for example code.
+
+The Panel class must implement the following methods:
+#### panelParameters(): array
+Returns view parameters for the panel view as array<string: mixed>;
+
+#### panelTitle(): string
+Returns the panel title.
+
+#### tabIcon(array $parameters): string
+Returns the icon for the debugger tab view; it must be valid SVG.
+
+The method takes the tab parameters as a parameter to allow the icon to reflect the state of the tab;
+e.g. whether any database queries were executed.
+
+#### tabParameters(): array
+Returns view parameters for the debugger tab view as array<string: mixed>;
+
+#### tabTitle(): string
+Returns the title for the debugger tab.
+
+### Views
+The panel must implement two views: _tab_ and _panel_.
+The views need only render the tab/panel content;
+Yii Tracy provides layouts for both tab and panel to decorate the content.
+
+Rendering is done using Yii\View\View.
 
 ## License
 The BeastBytes Yii Tracy package is free software. It is released under the terms of the BSD License.
