@@ -31,9 +31,6 @@ return [
         'panels' => [
             'route' => [
                 'class' => Route::class,
-                '__construct()' => [
-                    UrlMatcherInterface::class => [UrlMatcherInterfaceProxy::class, RouterCollector::class],
-                ]
             ],
         ]
     ]
