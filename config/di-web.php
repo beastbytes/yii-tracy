@@ -9,6 +9,6 @@ use Psr\Container\ContainerInterface;
 
 return [
     static function (ContainerInterface $container) use ($params) {
-        new Tracy($params['beastbytes/yii-tracy'], $container);
+        return new Tracy($params['beastbytes/yii-tracy'], $container);
     }
 ];
