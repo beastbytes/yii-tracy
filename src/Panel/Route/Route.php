@@ -8,7 +8,7 @@ use BeastBytes\Yii\Tracy\Panel\Panel;
 use Tracy\IBarPanel;
 use Yiisoft\Router\UrlMatcherInterface;
 
-class Route extends Panel implements IBarPanel
+class Route extends Panel
 {
     public function __construct(UrlMatcherInterface $urlMatcher)
     {

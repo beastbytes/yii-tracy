@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BeastBytes\Yii\Tracy;
 
+use BeastBytes\Yii\Tracy\Panel\Panel;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -40,39 +41,53 @@ class Tracy
      *     panels: array<string, array>, // panelId => panelDefinition
      * } $config
      * @param ContainerInterface $container
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
-    public function __construct(array $config, private readonly ContainerInterface $container)
+    public function __construct(private array $config, private readonly ContainerInterface $container)
     {
-        Debugger::$dumpTheme = $config['dumpTheme'];
-        Debugger::$editor = $config['editor'];
-        Debugger::$editorMapping = $config['editorMapping'];
-        Debugger::$keysToHide = $config['keysToHide'];
-        Debugger::$maxDepth = $config['maxDepth'];
-        Debugger::$maxLength = $config['maxLength'];
-        Debugger::$maxItems = $config['maxItems'];
-        Debugger::$scream = $config['scream'];
-        Debugger::$showLocation = $config['showLocation'];
-        Debugger::$strictMode = $config['strictMode'];
+    }
+
+    /**
+     * Enables the debugger.
+     * Called as an ApplicationStartup event handler
+     * @throws NotFoundExceptionInterface
+     * @throws InvalidConfigException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
+    public function enable(): void
+    {
+        Debugger::$dumpTheme = $this->config['dumpTheme'];
+        Debugger::$editor = $this->config['editor'];
+        Debugger::$editorMapping = $this->config['editorMapping'];
+        Debugger::$keysToHide = $this->config['keysToHide'];
+        Debugger::$maxDepth = $this->config['maxDepth'];
+        Debugger::$maxLength = $this->config['maxLength'];
+        Debugger::$maxItems = $this->config['maxItems'];
+        Debugger::$scream = $this->config['scream'];
+        Debugger::$showLocation = $this->config['showLocation'];
+        Debugger::$strictMode = $this->config['strictMode'];
         Debugger::$time = array_key_exists('REQUEST_TIME_FLOAT', $_SERVER)
             ? $_SERVER['REQUEST_TIME_FLOAT']
             : microtime(true)
         ;
 
         Debugger::enable(
-            mode: $config['mode'],
-            logDirectory: $container->get('Yiisoft\Aliases\Aliases')->get($config['logDirectory']),
-            email: $config['email']
+            mode: $this->config['mode'],
+            logDirectory: $this
+                ->container
+                ->get('Yiisoft\Aliases\Aliases')
+                ->get($this->config['logDirectory'])
+            ,
+            email: $this->config['email']
         );
 
-
-        if (!is_null($config['emailSnooze'])) {
-            Debugger::getLogger()->emailSnooze = $config['emailSnooze'];
+        if (!is_null($this->config['emailSnooze'])) {
+            Debugger::getLogger()->emailSnooze = $this->config['emailSnooze'];
         }
 
-        $this->addPanels($config['panels'], Debugger::getBar());
+        $this->addPanels($this->config['panels'], Debugger::getBar());
     }
 
     /**
@@ -91,13 +106,9 @@ class Tracy
         $factory = new Factory($this->container);
 
         foreach ($panels as $id => $config) {
-            $bar->addPanel(
-                $factory
-                    ->create($config)
-                    ->setContainer($this->container)
-                ,
-                $id
-            );
+            /** @var Panel $panel */
+            $panel = $factory->create($config);
+            $bar->addPanel($panel->withContainer($this->container), $id);
         }
     }
 }

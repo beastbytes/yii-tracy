@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace BeastBytes\Yii\Tracy\Panel;
 
 use Psr\Container\ContainerInterface;
+use Tracy\IBarPanel;
 
-abstract class Panel
+abstract class Panel implements IBarPanel
 {
     protected ContainerInterface $container;
     protected ?array $viewParameters = null;
@@ -14,10 +15,11 @@ abstract class Panel
 
     abstract protected function getViewParameters(): array;
 
-    public function setContainer(ContainerInterface $container): self
+    final public function withContainer(ContainerInterface $container): static
     {
-        $this->container = $container;
-        return $this;
+        $new = clone $this;
+        $new->container = $container;
+        return $new;
     }
 
     protected function render(string $view): string
