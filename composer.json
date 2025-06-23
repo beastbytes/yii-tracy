@@ -16,7 +16,10 @@
     "psr/container": "2.0",
     "tracy/tracy": "^3.0-dev",
     "yiisoft/aliases": "^3.0",
+    "yiisoft/db": "dev-master",
     "yiisoft/factory": "^1.0",
+    "yiisoft/view": "^12.0",
+    "yiisoft/yii-debug": "dev-master",
     "yiisoft/yii-http": "^1.0"
   },
   "require-dev": {
