@@ -8,7 +8,7 @@ use Psr\Container\ContainerInterface;
 /** @var array $params */
 
 return [
-    static function (ContainerInterface $container) use ($params) {
+    Tracy::class => static function (ContainerInterface $container) use ($params) {
         return new Tracy($params['beastbytes/yii-tracy'], $container);
     }
 ];
