@@ -32,7 +32,7 @@ class Route extends Panel
     {
         if (is_null($this->viewParameters)) {
             /** @var CurrentRoute $currentRoute */
-            $currentRoute = $this->container->get('currentRoute');
+            $currentRoute = $this->container->get(CurrentRoute::class);
             $this->viewParameters = [
                 'rows' => [
                     'name' => $currentRoute->getName(),
