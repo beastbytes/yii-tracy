@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace BeastBytes\Yii\Tracy\Panel\Route;
 
 use BeastBytes\Yii\Tracy\Panel\Panel;
-use Tracy\IBarPanel;
-use Yiisoft\Router\UrlMatcherInterface;
+use Yiisoft\Router\CurrentRoute;
 
 class Route extends Panel
 {
-    public function __construct(UrlMatcherInterface $urlMatcher)
+    public function __construct()
     {
         $this->viewPath = __DIR__ . DIRECTORY_SEPARATOR
             . 'resources' . DIRECTORY_SEPARATOR
@@ -32,6 +31,7 @@ class Route extends Panel
     protected function getViewParameters(): array
     {
         if (is_null($this->viewParameters)) {
+            /** @var CurrentRoute $currentRoute */
             $currentRoute = $this->container->get('currentRoute');
             $this->viewParameters = [
                 'rows' => [
