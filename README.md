@@ -83,7 +83,7 @@ Returns view parameters for the debugger tab view as array<string: mixed>;
 Returns the title for the debugger tab.
 
 ### Views
-The panel must implement two views: _tab_ and _panel_.
+The panel must implement two views, _tab_ and _panel_; they are _php_ templates.
 The views need only render the tab/panel content;
 Yii Tracy provides layouts for both tab and panel to decorate the content.
 
