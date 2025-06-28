@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace BeastBytes\Yii\Tracy\Panel\Auth;
 
 use BeastBytes\Yii\Tracy\Panel\Panel;
+use Yiisoft\Rbac\AssignmentsStorageInterface;
+use Yiisoft\Rbac\ItemsStorageInterface;
+use Yiisoft\Rbac\Manager;
 use Yiisoft\User\CurrentUser;
 
 class Auth extends Panel
 {
-    private const string ICON_AUTHORISED = <<<ICON
+    private const ICON_AUTHORISED = <<<ICON
 <svg 
     xmlns="http://www.w3.org/2000/svg"
     height="24px"
@@ -44,15 +47,95 @@ ICON;
 </svg> 
 ICON;
 
-    private const string TITLE = 'Current User';
+    private const TITLE = 'Current User';
 
     private ?CurrentUser $currentUser = null;
+    private $id2pk;
+    private $tabValue;
+    private $userParameters;
+
+    /**
+     * @param callable $id2pk Converts string ID to databse primary key.
+     * Example, if using a UUID that is stored in binary format.
+     * @param callable $tabValue Function to get the Auth tab value displayed on the debugger bar.
+     * If not defined the current user user ID is shown. The signature is (IdentityInterface $identity); returns string
+     * @param callable $userParameters Function to get user parameters to show on the panel
+     * from the current user identity. The signature is (IdentityInterface $identity); returns array{string: string}
+     */
+    public function __construct(mixed $id2pk = null, $tabValue = null, mixed $userParameters = null)
+    {
+        if (is_callable($id2pk)) {
+            $this->id2pk = $id2pk;
+        }
+        if (is_callable($tabValue)) {
+            $this->tabValue = $tabValue;
+        }
+        if (is_callable($userParameters)) {
+            $this->userParameters = $userParameters;
+        }
+    }
 
     public function panelParameters(): array
     {
-        return [
+        $panelParameters = [
             'currentUser' => $this->getCurrentUser(),
+            'permissions' => [],
+            'roles' => [],
+            'userParameters' => [],
         ];
+        
+        if (
+            $this
+                ->container
+                ->has(AssignmentsStorageInterface::class)
+        ) {
+            $rbacManager = new Manager(
+                $this
+                    ->container
+                    ->get(ItemsStorageInterface::class)
+                ,
+                $this
+                    ->container
+                    ->get(AssignmentsStorageInterface::class)
+            );
+
+            $userId = $this
+                ->currentUser
+                ->getId()
+            ;
+
+            if ($userId === null) {
+                $guestRoleName = $rbacManager->getGuestRoleName();
+
+                $panelParameters['roles'] = $guestRoleName
+                    ? [$rbacManager->getGuestRole()]
+                    : []
+                ;
+
+                $panelParameters['permissions'] = $guestRoleName
+                    ? $rbacManager->getPermissionsByRoleName($guestRoleName)
+                    : []
+                ;
+            } else {
+                $panelParameters['roles'] = $rbacManager
+                    ->getRolesByUserId(
+                        is_callable($this->id2pk) ? ($this->id2pk)($userId) : $userId
+                    )
+                ;
+
+                $panelParameters['permissions'] = $rbacManager
+                    ->getPermissionsByUserId(
+                        is_callable($this->id2pk) ? ($this->id2pk)($userId) : $userId
+                    )
+                ;
+
+                if (is_callable($this->userParameters)) {
+                    $panelParameters['userParameters'] = ($this->userParameters)($this->currentUser->getIdentity());
+                }
+            }
+        }
+        
+        return $panelParameters;
     }
 
     public function panelTitle(): string
@@ -69,7 +152,7 @@ ICON;
      */
     public function tabIcon(array $parameters): string
     {
-        return $parameters['currentUser']->isGuest()
+        return $this->getCurrentUser()->isGuest()
             ? self::ICON_GUEST
             : self::ICON_AUTHORISED
         ;
@@ -77,9 +160,16 @@ ICON;
 
     public function tabParameters(): array
     {
-        return [
-            'currentUser' => $this->getCurrentUser(),
-        ];
+        if ($this->getCurrentUser()->isGuest()) {
+            $value = 'Guest';
+        } else {
+            $value = is_callable($this->tabValue)
+                ? ($this->tabValue)($this->getCurrentUser()->getIdentity())
+                : $this->getCurrentUser()->getId()
+            ;
+        }
+
+        return ['value' => $value];
     }
 
     public function tabTitle(): string
