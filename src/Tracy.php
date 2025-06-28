@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace BeastBytes\Yii\Tracy;
 
+use BeastBytes\Yii\Tracy\Panel\CollectorPanelInterface;
 use BeastBytes\Yii\Tracy\Panel\Panel;
+use BeastBytes\Yii\Tracy\Panel\ServiceCollectorPanel;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -56,7 +58,7 @@ class Tracy
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function enable(): void
+    public function start(): void
     {
         Debugger::$dumpTheme = $this->config['dumpTheme'];
         Debugger::$editor = $this->config['editor'];
@@ -91,6 +93,22 @@ class Tracy
     }
 
     /**
+     * Shutsdown panel collectors. Called as an AfterEmit event handler. 
+     */
+    public function stop(): void
+    {
+        $bar = Debugger::getBar();
+        
+        foreach (array_keys($this->config['panels']) as $id) {
+            $panel = $bar->getPanel($id);
+            
+            if ($panel instanceof CollectorPanelInterface) {
+                $panel->getCollector()->shutdown();
+            }
+        }
+    }
+
+    /**
      * Add panels to the bar
      *
      * @param array $panels
@@ -107,8 +125,15 @@ class Tracy
 
         foreach ($panels as $id => $config) {
             /** @var Panel $panel */
-            $panel = $factory->create($config);
-            $bar->addPanel($panel->withContainer($this->container), $id);
+            $panel = $factory->create($config)
+                ->withContainer($this->container)
+            ;
+
+            if ($panel instanceof CollectorPanelInterface) {
+                $panel->start();
+            }
+
+            $bar->addPanel($panel, $id);
         }
     }
 }
