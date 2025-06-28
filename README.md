@@ -36,6 +36,44 @@ Yii-Tracy is configured using Yii’s configuration. It has the following config
 * showBar (bool) Whether to display debug bar in _**development mode**_.
 * token (string) The secret token for enabling _**development mode**_ for IP addresses. See _mode_
 
+### Vendor Override Layer
+_**IMPORTANT**_
+
+Add Yii Tracy to the 
+[vendor-override-layer](https://github.com/yiisoft/config/blob/master/README.md#vendor-override-layer)
+section in either `composer.json`
+
+```json
+{
+    // other composer sections
+    "extra": {
+      "config-plugin-options": {
+        // other config plugin options
+        "vendor-override-layer": [
+          "beastbytes/yii-tracy"
+        ]
+      }
+    }  
+}
+```
+
+or the application configuration file if used.
+
+```php
+return [
+    // Other configuration
+    'config-plugin-options' => [
+        // Other config plugin options
+        'vendor-override-layer' => [
+            'beastbytes/yii-tracy',
+        ],
+    ],
+];
+```
+
+This is needed because Yii Tracy uses classes from the Yii Debug package, which is installed.
+Adding Yii Tracy to the vendor override layer allows it to disable Yii Debug.
+
 ## Panels
 Yii Tracy defines a set of panels that can be added to the debugger bar; it is also possible to add user defined panels. 
 ### Auth
