@@ -5,6 +5,8 @@ declare(strict_types=1);
 use BeastBytes\Yii\Tracy\Panel\Auth\Auth;
 use BeastBytes\Yii\Tracy\Panel\Database\Database;
 use BeastBytes\Yii\Tracy\Panel\Route\Route;
+use Yiisoft\Db\Connection\ConnectionInterface;
+use Yiisoft\Db\Debug\ConnectionInterfaceProxy;
 use Yiisoft\Db\Debug\DatabaseCollector;
 use Yiisoft\Definitions\Reference;
 use Yiisoft\Router\Debug\RouterCollector;
@@ -38,11 +40,18 @@ return [
             ],
             'database' => [
                 'class' => Database::class,
-                '__construct()' => [Reference::to(DatabaseCollector::class)]
+                '__construct()' => [
+                    Reference::to(DatabaseCollector::class),
+                    ConnectionInterface::class,
+                    Reference::to(ConnectionInterfaceProxy::class),
+                ],
             ],
             'route' => [
                 'class' => Route::class,
             ],
         ]
-    ]
+    ],
+    'yiisoft/debug' => [
+        'enabled' => false,
+    ],
 ];
