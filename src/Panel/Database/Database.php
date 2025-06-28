@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BeastBytes\Yii\Tracy\Panel\Database;
 
 use BeastBytes\Yii\Tracy\Panel\ServiceCollectorPanel;
+use BeastBytes\Yii\Tracy\ProxyContainer;
 use Yiisoft\Db\Connection\ConnectionInterface;
 use Yiisoft\Db\Debug\DatabaseCollector;
 
@@ -41,7 +42,7 @@ ICON;
             ->getCollected()
         ;
 
-        $connection = $this->container->get(ConnectionInterface::class);
+        $connection = $this->container->get(ProxyContainer::BYPASS . ConnectionInterface::class);
         $panelParameters['dsn'] = $connection->getDriver()->getDsn();
         
         $schema = $connection->getSchema();
