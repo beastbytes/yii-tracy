@@ -31,7 +31,14 @@ class ProxyContainer implements ContainerInterface
      */
     public function get(string $id): mixed
     {
-        if (array_key_exists($id, $this->services)) {
+        if (str_starts_with($id, self::BYPASS)) {
+            $bypass = true;
+            $id = substr($id, strlen(self::BYPASS));
+        } else {
+            $bypass = false;
+        }
+
+        if (!$bypass && array_key_exists($id, $this->services)) {
             return $this->services[$id];
         }
 
