@@ -24,8 +24,6 @@ return [
         'scream' => false,
         'showLocation' => null,
         'strictMode' => false,
-
-
         'enabled' => $_ENV['YII_DEBUG'],
         'showBar' => true,
         'editor' => '',
@@ -49,7 +47,7 @@ return [
             'route' => [
                 'class' => Route::class,
             ],
-        ]
+        ],
     ],
     'yiisoft/debug' => [
         'enabled' => false,
