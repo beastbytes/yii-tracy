@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace BeastBytes\Yii\Tracy\Panel;
 
-use PHPStan\Type\Php\DateIntervalDynamicReturnTypeExtension;
 use Psr\Container\ContainerInterface;
 use Tracy\IBarPanel;
 use Yiisoft\View\View;
@@ -13,7 +12,6 @@ use Yiisoft\View\ViewContextInterface;
 abstract class Panel implements IBarPanel, ViewContextInterface
 {
     protected ?ContainerInterface $container = null;
-    protected ?array $viewParameters = null;
     protected ?string $viewPath = null;
 
     abstract protected function panelParameters(): array;
