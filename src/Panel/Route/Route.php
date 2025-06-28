@@ -10,7 +10,7 @@ use Yiisoft\Router\CurrentRoute;
 
 class Route extends Panel
 {
-    private const string ICON = <<<ICON
+    private const ICON = <<<ICON
 <svg
     xmlns = "http://www.w3.org/2000/svg"
     height = "24px"
