@@ -40,23 +40,85 @@ Yii-Tracy is configured using Yii’s configuration. It has the following config
 Yii Tracy defines a set of panels that can be added to the debugger bar; it is also possible to add user defined panels. 
 ### Auth
 Provides information about the current user.
+#### Tab
+By default the current user ID is shown. This can be changed by setting `StabValue` in the constructor (see Tab Value).
+#### Panel
+The panel shows:
+* the current user ID
+* assigned Roles (if RBAC enabled)
+* granted Permissions (if RBAC enabled)
+* user defined parameters (see Panel Parameters)
+
+The information shown can be customised.
+##### Customisation
+###### Tab Value
+By default, the current user ID is shown on the tab. This can be changed by setting `StabValue` in the constructor.
+
+`$tabValue` is an anonymous function that takes the current identity (`IdentityInterface`) as its parameter
+and returns a string.
+###### Panel Parameters
+Additional information about the current user can be shown on the user panel by setting `$panelparameters`
+in the constructor.
+
+`$panelParameters` is an anonymous function that takes the current identity (`IdentityInterface`) as its parameter
+and returns parameters to show as `array{string: string}` 
+where the key is the name of the parameter and value its value.
+###### id2pk
+Depending on how user IDs - Primary Keys - are stored in the database,
+if using (RBAC)[https://github.com/yiisoft/rbac] it may be necessary to convert the user ID
+in order to get user Roles and Permissions.
+An example is when using [UUIDs](https://en.wikipedia.org/wiki/Universally_unique_identifier) as the primary key
+and storing it in the database in binary format.
+
+`id2pk` is an anonymous function that takes the string representation of the user ID as its parameter
+and returns the Primary Key representation.
+
 ### Database
 Provides information about the database connection and executed queries.
+#### Tab
+Shows the number of queries.
+#### Panel
+Shows the database DSN and lists the queries executed. Each query shows:
+* SQL
+* Query parameters
+* Execution time
+
 ### Event
 Not sure what yet
+#### Tab
+#### Panel
+
 ### Request
 Provides information about the current request.
+#### Tab
+#### Panel
+
 ### Route
 Provides information about the current route.
+#### Tab
+#### Panel
+
 ### Session
 Provides information about the session.
+#### Tab
+Does not show data on the tab.
+#### Panel
+Session values as name=>value pairs.
+
 ### View
 Provides information about the rendered view.
+#### Tab
+Does not show data on the tab.
+#### Panel
+Names of the rendered view, included partial views, and layout, and their parameters.
 
 ## User Defined Panel
 ### Panel Class
-The Panel class must extend `BeastBytes\Yii\Tracy\Panel\Panel`. 
-The Panel class has access to Yii's Dependency Injection container through the `$container` property.
+The Panel class must extend either `BeastBytes\Yii\Tracy\Panel\Panel` 
+or a collector panel class that implements `BeastBytes\Yii\Tracy\Panel\CollectorPanelInterface`
+if the panel uses a `Yiisoft\Yii\Debug\Collector\CollectorInterface`.
+
+All panels have access to Yii's Dependency Injection container through the `$container` property.
 
 To add the panel to Tracy, add its configuration to `'beastbytes/yii-tracy'['panels']`.
 
