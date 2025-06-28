@@ -18,16 +18,17 @@
     "yiisoft/aliases": "^3.0",
     "yiisoft/db": "dev-master",
     "yiisoft/factory": "^1.0",
+    "yiisoft/router": "^4.0",
     "yiisoft/view": "^12.0",
     "yiisoft/yii-debug": "dev-master",
-    "yiisoft/yii-http": "^1.0"
+    "yiisoft/yii-http": "^1.0",
+    "yiisoft/yii-view-renderer": "^7.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^10.0",
     "vimeo/psalm": "^5.0",
     "yiisoft/di": "^1.0",
-    "yiisoft/dummy-provider": "^1.0",
-    "yiisoft/router": "^4.0"
+    "yiisoft/dummy-provider": "^1.0"
   },
   "autoload": {
     "psr-4": {
@@ -39,6 +40,7 @@
       "source-directory": "config"
     },
     "config-plugin": {
+      "di-providers-web": "di-providers-web.php",
       "di-web": "di-web.php",
       "events-web": "events-web.php",
       "params-web": "params-web.php"
