@@ -8,7 +8,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class ProxyContainer implements ContainerInterface
+final class ProxyContainer implements ContainerInterface
 {
     public const BYPASS = '*';
 

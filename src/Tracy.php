@@ -9,7 +9,6 @@ use BeastBytes\Yii\Tracy\Panel\Panel;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Tracy\Bar;
 use Tracy\Debugger;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
@@ -17,7 +16,7 @@ use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\Factory;
 use Yiisoft\Factory\NotFoundException;
 
-class Tracy
+final class Tracy
 {
     public const DEFAULT_CONFIG = [
         'mode' => null,
