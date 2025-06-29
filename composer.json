@@ -1,6 +1,6 @@
 {
   "name": "beastbytes/yii-tracy",
-  "description": "Configuration to integrate the Tracy Yii Framework Latte Template Renderer",
+  "description": "Integrate the Tracy debugger into the Yii Framework",
   "keywords": [
     "yii",
     "Tracy",
@@ -18,6 +18,7 @@
     "yiisoft/aliases": "^3.0",
     "yiisoft/db": "dev-master",
     "yiisoft/factory": "^1.0",
+    "yiisoft/rbac": "^2.0",
     "yiisoft/router": "^4.0",
     "yiisoft/view": "^12.0",
     "yiisoft/yii-debug": "dev-master",
@@ -28,11 +29,17 @@
     "phpunit/phpunit": "^10.0",
     "vimeo/psalm": "^5.0",
     "yiisoft/di": "^1.0",
-    "yiisoft/dummy-provider": "^1.0"
+    "yiisoft/dummy-provider": "^1.0",
+    "yiisoft/test-support": "^3.0"
   },
   "autoload": {
     "psr-4": {
       "BeastBytes\\Yii\\Tracy\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "BeastBytes\\Yii\\Tracy\\Tests\\": "tests/"
     }
   },
   "extra": {

@@ -6,7 +6,6 @@ namespace BeastBytes\Yii\Tracy;
 
 use BeastBytes\Yii\Tracy\Panel\CollectorPanelInterface;
 use BeastBytes\Yii\Tracy\Panel\Panel;
-use BeastBytes\Yii\Tracy\Panel\ServiceCollectorPanel;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -20,6 +19,24 @@ use Yiisoft\Factory\NotFoundException;
 
 class Tracy
 {
+    public const DEFAULT_CONFIG = [
+        'mode' => null,
+        'dumpTheme' => 'dark',
+        'keysToHide' => [],
+        'maxDepth' => 10,
+        'maxLength' => 1024,
+        'maxItems' => 100,
+        'scream' => false,
+        'showLocation' => true,
+        'strictMode' => false,
+        'editor' => '',
+        'editorMapping' => [],
+        'email' => null,
+        'emailSnooze' => null,
+        'logDirectory' => '@runtime/logs',
+        'logSeverity' => 0,
+    ];
+
     /**
      * @param array $config
      * @psalm-param array{
@@ -46,6 +63,12 @@ class Tracy
      */
     public function __construct(private array $config, private readonly ContainerInterface $container)
     {
+        $this->config = array_merge(self::DEFAULT_CONFIG, $this->config);
+    }
+
+    public function __call(string $name, array $arguments)
+    {
+        return call_user_func_array([Debugger::class, $name], $arguments);
     }
 
     /**
@@ -89,11 +112,11 @@ class Tracy
             Debugger::getLogger()->emailSnooze = $this->config['emailSnooze'];
         }
 
-        $this->addPanels($this->config['panels'], Debugger::getBar());
+        $this->addPanels();
     }
 
     /**
-     * Shutsdown panel collectors. Called as an AfterEmit event handler. 
+     * Shutdown panel collectors. Called as an AfterEmit event handler.
      */
     public function stop(): void
     {
@@ -110,20 +133,17 @@ class Tracy
 
     /**
      * Add panels to the bar
-     *
-     * @param array $panels
-     * @psalm-param array<string, array> $panels
-     * @param Bar $bar
      * @throws InvalidConfigException
      * @throws NotFoundException
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    private function addPanels(array $panels, Bar $bar): void
+    private function addPanels(): void
     {
+        $bar = Debugger::getBar();
         $factory = new Factory($this->container);
 
-        foreach ($panels as $id => $config) {
+        foreach ($this->config['panels'] as $id => $config) {
             /** @var Panel $panel */
             $panel = $factory->create($config)
                 ->withContainer($this->container)

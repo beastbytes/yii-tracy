@@ -1,20 +1,13 @@
-The Yii-Tracy package integrates the [Tracy debugging tool](https://tracy.nette.org/)
-into [Yii3](https://www.yiiframework.com/) by providing the necessary configuration.
+The Yii Tracy package integrates the [Tracy debugging tool](https://tracy.nette.org/)
+into [Yii3](https://www.yiiframework.com/).
 
 ## Requirements
 - PHP 8.1 or higher
 
 ## Installation
-Install the package using [Composer](https://getcomposer.org):
+Do not directly install this package.
 
-Either:
-```shell
-composer require beastbytes/yii-tracy
-```
-or add the following to the `require` section of your `composer.json`
-```json
-"beastbytes/yii-tracy": "<version_constraint>"
-```
+This package is a requirement of Yii Tracy Panels; install the required Yii Tracy Panels.
 
 ## Configuration
 Yii-Tracy is configured using Yii’s configuration. It has the following configuration parameters:
@@ -32,146 +25,37 @@ Yii-Tracy is configured using Yii’s configuration. It has the following config
 * email (null|string|string[]) Email address(es) to which send error notifications
 * logDirectory (string) Path alias to the log directory. Default: `'@runtime/logs'`
 * logSeverity (int) Log bluescreen in production mode for this error severity.
-* panels (array[]) List of panels available to Tracy and their configuration.
 * showBar (bool) Whether to display debug bar in _**development mode**_.
 * token (string) The secret token for enabling _**development mode**_ for IP addresses. See _mode_
 
-### Vendor Override Layer
-_**IMPORTANT**_
-
-Add Yii Tracy to the 
-[vendor-override-layer](https://github.com/yiisoft/config/blob/master/README.md#vendor-override-layer)
-section in either `composer.json`
-
-```json
-{
-    // other composer sections
-    "extra": {
-      "config-plugin-options": {
-        // other config plugin options
-        "vendor-override-layer": [
-          "beastbytes/yii-tracy"
-        ]
-      }
-    }  
-}
-```
-
-or the application configuration file if used.
-
-```php
-return [
-    // Other configuration
-    'config-plugin-options' => [
-        // Other config plugin options
-        'vendor-override-layer' => [
-            'beastbytes/yii-tracy',
-        ],
-    ],
-];
-```
-
-This is needed because Yii Tracy uses classes from the Yii Debug package, which is installed.
-Adding Yii Tracy to the vendor override layer allows it to disable Yii Debug.
-
 ## Panels
-Yii Tracy defines a set of panels that can be added to the debugger bar; it is also possible to add user defined panels. 
-### Auth
-Provides information about the current user.
-#### Tab
-By default the current user ID is shown. This can be changed by setting `StabValue` in the constructor (see Tab Value).
-#### Panel
-The panel shows:
-* the current user ID
-* assigned Roles (if RBAC enabled)
-* granted Permissions (if RBAC enabled)
-* user defined parameters (see Panel Parameters)
+The following panels are available:
+* [Auth](https://github.com/beastbytes/yii-tracy-panel-auth) Provides information about the current user.
+* [Database](https://github.com/beastbytes/yii-tracy-panel-database) Provides information about the database connection and executed queries.
+* [Request](https://github.com/beastbytes/yii-tracy-panel-request) Provides information about the current request.
+* [Route](https://github.com/beastbytes/yii-tracy-panel-route) Provides information about the current route.
+* [Session](https://github.com/beastbytes/yii-tracy-panel-session) Provides information about the session.
+* [View](https://github.com/beastbytes/yii-tracy-panel-view) Provides information about the rendered view.
 
-The information shown can be customised.
-##### Customisation
-###### Tab Value
-By default, the current user ID is shown on the tab. This can be changed by setting `StabValue` in the constructor.
-
-`$tabValue` is an anonymous function that takes the current identity (`IdentityInterface`) as its parameter
-and returns a string.
-###### Panel Parameters
-Additional information about the current user can be shown on the user panel by setting `$panelparameters`
-in the constructor.
-
-`$panelParameters` is an anonymous function that takes the current identity (`IdentityInterface`) as its parameter
-and returns parameters to show as `array{string: string}` 
-where the key is the name of the parameter and value its value.
-###### id2pk
-Depending on how user IDs - Primary Keys - are stored in the database,
-if using (RBAC)[https://github.com/yiisoft/rbac] it may be necessary to convert the user ID
-in order to get user Roles and Permissions.
-An example is when using [UUIDs](https://en.wikipedia.org/wiki/Universally_unique_identifier) as the primary key
-and storing it in the database in binary format.
-
-`id2pk` is an anonymous function that takes the string representation of the user ID as its parameter
-and returns the Primary Key representation.
-
-### Database
-Provides information about the database connection and executed queries.
-#### Tab
-Shows the number of queries.
-#### Panel
-Shows the database DSN and lists the queries executed. Each query shows:
-* SQL
-* Query parameters
-* Execution time
-
-### Event
-Not sure what yet
-#### Tab
-#### Panel
-
-### Request
-Provides information about the current request.
-#### Tab
-#### Panel
-
-### Route
-Provides information about the current route.
-#### Tab
-#### Panel
-
-### Session
-Provides information about the session.
-#### Tab
-Does not show data on the tab.
-#### Panel
-Session values as name=>value pairs.
-
-### View
-Provides information about the rendered view.
-#### Tab
-Does not show data on the tab.
-#### Panel
-Names of the rendered view, included partial views, and layout, and their parameters.
-
-## User Defined Panel
-### Panel Class
+### User Defined Panel
+#### Panel Class
 The Panel class must extend either `BeastBytes\Yii\Tracy\Panel\Panel` 
-or a collector panel class that implements `BeastBytes\Yii\Tracy\Panel\CollectorPanelInterface`
-if the panel uses a `Yiisoft\Yii\Debug\Collector\CollectorInterface`.
+or one of the collector panel classes if the panel uses a `Yiisoft\Yii\Debug\Collector\CollectorInterface`.
 
 All panels have access to Yii's Dependency Injection container through the `$container` property.
-
-To add the panel to Tracy, add its configuration to `'beastbytes/yii-tracy'['panels']`.
 
 See [Tracy Bar Extensions](https://tracy.nette.org/en/extensions) for more information
 and examine the package's panels for example code.
 
 The Panel class must implement the following methods:
-#### panelParameters(): array
+##### panelParameters(): array
 Returns view parameters for the panel view as array<string: mixed>;
 
-#### panelTitle(): string
+##### panelTitle(): string
 Returns the panel title.
 
-#### tabIcon(array $parameters): string
-Returns the icon for the debugger tab view; it must be valid SVG.
+##### tabIcon(array $parameters): string
+Returns an SVG icon for the debugger tab view.
 
 The method takes the tab parameters as a parameter to allow the icon to reflect the state of the tab;
 e.g. whether any database queries were executed.
@@ -179,10 +63,10 @@ e.g. whether any database queries were executed.
 #### tabParameters(): array
 Returns view parameters for the debugger tab view as array<string: mixed>;
 
-#### tabTitle(): string
+##### tabTitle(): string
 Returns the title for the debugger tab.
 
-### Views
+#### Views
 The panel must implement two views, _tab_ and _panel_; they are _php_ templates.
 The views need only render the tab/panel content;
 Yii Tracy provides layouts for both tab and panel to decorate the content.
