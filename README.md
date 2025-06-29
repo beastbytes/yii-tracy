@@ -19,7 +19,7 @@ Yii-Tracy is configured using Yii’s configuration. It has the following config
   * string: enable _**development mode**_ for the given IP address.
   * string[]: enable _**development mode**_ for IP addresses in the list.
 
-    **NOTE** It is highly recommended to combine IP addresses with a cookie token by specifying allowed addresses as 
+    **NOTE** It is highly recommended to combine IP addresses with a cookie token by specifying allowed addresses as
     `<token>@<ipAddress>`; see _token_.
 * editor (string) [Tracy IDE integration](https://tracy.nette.org/en/open-files-in-ide)
 * email (null|string|string[]) Email address(es) to which send error notifications
@@ -30,16 +30,16 @@ Yii-Tracy is configured using Yii’s configuration. It has the following config
 
 ## Panels
 The following panels are available:
-* [Auth](https://github.com/beastbytes/yii-tracy-panel-auth) Provides information about the current user.
 * [Database](https://github.com/beastbytes/yii-tracy-panel-database) Provides information about the database connection and executed queries.
 * [Request](https://github.com/beastbytes/yii-tracy-panel-request) Provides information about the current request.
 * [Route](https://github.com/beastbytes/yii-tracy-panel-route) Provides information about the current route.
 * [Session](https://github.com/beastbytes/yii-tracy-panel-session) Provides information about the session.
+* [User](https://github.com/beastbytes/yii-tracy-panel-user) Provides information about the current user.
 * [View](https://github.com/beastbytes/yii-tracy-panel-view) Provides information about the rendered view.
 
 ### User Defined Panel
 #### Panel Class
-The Panel class must extend either `BeastBytes\Yii\Tracy\Panel\Panel` 
+The Panel class must extend either `BeastBytes\Yii\Tracy\Panel\Panel`
 or one of the collector panel classes if the panel uses a `Yiisoft\Yii\Debug\Collector\CollectorInterface`.
 
 All panels have access to Yii's Dependency Injection container through the `$container` property.
@@ -48,22 +48,39 @@ See [Tracy Bar Extensions](https://tracy.nette.org/en/extensions) for more infor
 and examine the package's panels for example code.
 
 The Panel class must implement the following methods:
+##### getViewPath(): string
+**Visibility**: _public_
+
+Returns the view path.
+
+BeastBytes\Yii\Tracy\ViewTrait provides this method for panels that follow the standard file structure.
+
 ##### panelParameters(): array
+**Visibility**: _protected_
+
 Returns view parameters for the panel view as array<string: mixed>;
 
 ##### panelTitle(): string
+**Visibility**: _protected_
+
 Returns the panel title.
 
 ##### tabIcon(array $parameters): string
+**Visibility**: _protected_
+
 Returns an SVG icon for the debugger tab view.
 
 The method takes the tab parameters as a parameter to allow the icon to reflect the state of the tab;
 e.g. whether any database queries were executed.
 
 #### tabParameters(): array
+**Visibility**: _protected_
+
 Returns view parameters for the debugger tab view as array<string: mixed>;
 
 ##### tabTitle(): string
+**Visibility**: _protected_
+
 Returns the title for the debugger tab.
 
 #### Views

@@ -14,6 +14,7 @@ abstract class Panel implements IBarPanel, ViewContextInterface
     protected ?ContainerInterface $container = null;
     protected ?string $viewPath = null;
 
+    abstract public function getViewPath(): string;
     abstract protected function panelParameters(): array;
     abstract protected function panelTitle(): string;
     abstract protected function tabIcon(array $parameters): string;
@@ -28,21 +29,6 @@ abstract class Panel implements IBarPanel, ViewContextInterface
     public function getTab(): string
     {
         return $this->render('tab', $this->tabParameters());
-    }
-
-    public function getViewPath(): string
-    {
-        $cls = explode('\\', get_called_class());
-
-        if (is_null($this->viewPath)) {
-            $this->viewPath = __DIR__ . DIRECTORY_SEPARATOR
-                . array_pop($cls) . DIRECTORY_SEPARATOR
-                . 'resources' . DIRECTORY_SEPARATOR
-                . 'views' . DIRECTORY_SEPARATOR
-            ;
-        }
-
-        return $this->viewPath;
     }
 
     public function withContainer(ContainerInterface $container): self
