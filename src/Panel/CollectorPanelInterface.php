@@ -10,5 +10,5 @@ interface CollectorPanelInterface
 {
     public function getCollector(): CollectorInterface;
 
-    public function start(): void;
+    public function start(): self;
 }

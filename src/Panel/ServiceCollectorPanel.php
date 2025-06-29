@@ -10,21 +10,21 @@ abstract class ServiceCollectorPanel extends Panel implements CollectorPanelInte
 {
     use CollectorPanelTrait;
 
-    public function __construct(
-        protected CollectorInterface $collector,
-        private string $serviceId,
-        private object $proxy
-    )
+    public function __construct(protected CollectorInterface $collector, private readonly array $proxies)
     {
     }
 
-    public function start(): void 
+    public function start(): self
     {
-        $this->addProxyService($this->serviceId, $this->proxy);
-        
+        foreach ($this->proxies as $id => $proxy) {
+            $this->container->add($id, $proxy);
+        }
+
         $this
             ->collector
             ->startup()
         ;
+
+        return $this;
     }
 }
