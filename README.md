@@ -28,6 +28,34 @@ Yii-Tracy is configured using Yii’s configuration. It has the following config
 * showBar (bool) Whether to display debug bar in _**development mode**_.
 * token (string) The secret token for enabling _**development mode**_ for IP addresses. See _mode_
 
+## Disable Yii Debug
+Yii Tracy uses components of Yii Debug; to ensure Yii Tracy operates correctly, it is necessary to disable Yii Debug.
+
+In the application entry script, set the `configModifiers` parameter in the constructor of the application runner;
+the value is:
+```php
+[
+    RemoveFromVendor::groups([
+        'yiisoft/yii-debug' => '*',
+    ]),
+]
+```
+
+The end of the application entry script will be something like:
+```php
+(new HttpApplicationRunner(
+    rootPath: <root path>,
+    debug: <true|false>,
+    checkEvents: <true|false>,
+    environment: <development|test|production>,
+    configModifiers: [
+        RemoveFromVendor::groups([
+            'yiisoft/yii-debug' => '*',
+        ]),
+    ],
+))->run();
+```
+
 ## Panels
 The following panels are available:
 * [Database](https://github.com/beastbytes/yii-tracy-panel-database) Provides information about the database connection and executed queries.
