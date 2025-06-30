@@ -80,7 +80,7 @@ final class Tracy
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function start(): void
+    public function startup(): void
     {
         Debugger::$dumpTheme = $this->config['dumpTheme'];
         Debugger::$editor = $this->config['editor'];
@@ -115,15 +115,17 @@ final class Tracy
     }
 
     /**
-     * Shutdown panel collectors. Called as an AfterEmit event handler.
+     * Shutdown panel collectors. Called as an AppicationShutdown event handler.
      */
-    public function stop(): void
+    public function shutdown(): void
     {
+        Debugger::shutdownHandler(); // Debugger::shutdownHandler() renders debugger
+        Debugger::$showBar = false; // Prevent re-rendering
+
         $bar = Debugger::getBar();
-        
         foreach (array_keys($this->config['panels']) as $id) {
             $panel = $bar->getPanel($id);
-            
+
             if ($panel instanceof CollectorPanelInterface) {
                 $panel->getCollector()->shutdown();
             }
