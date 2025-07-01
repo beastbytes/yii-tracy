@@ -151,7 +151,7 @@ final class Tracy
             ;
 
             if ($panel instanceof CollectorPanelInterface) {
-                $panel->start();
+                $panel->startup();
             }
 
             $bar->addPanel($panel, $id);
