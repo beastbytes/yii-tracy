@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace BeastBytes\Yii\Tracy\Panel;
 
-use Yiisoft\Yii\Debug\Collector\CollectorInterface;
-
 interface CollectorPanelInterface
 {
-    public function getCollector(): CollectorInterface;
+    public function getCollected(): array;
 
-    public function start(): self;
+    public function getName(): string;
+
+    public function getSummary(): array;
+
+    public function shutdown(): void;
+
+    public function startup(): void;
 }

@@ -11,9 +11,29 @@ trait CollectorPanelTrait
 {
     private ?ProxyContainer $proxyContainer = null;
     
-    public function getCollector(): CollectorInterface
+    public function getCollected(): array
     {
-        return $this->collector;
+        return $this->collector->getCollected();
+    }
+
+    public function getName(): string
+    {
+        return $this->collector->getName();
+    }
+
+    public function getSummary(): array
+    {
+        return $this->collector->getSummary();
+    }
+
+    public function shutdown(): void
+    {
+        $this->collector->shutdown();
+    }
+
+    public function startup(): void
+    {
+        $this->collector->startup();
     }
 
     private function addProxyService(string $serviceId, object $proxy): void 

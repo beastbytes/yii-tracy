@@ -6,7 +6,7 @@ namespace BeastBytes\Yii\Tracy\Panel;
 
 use Yiisoft\Yii\Debug\Collector\CollectorInterface;
 
-abstract class ServiceCollectorPanel extends Panel implements CollectorPanelInterface
+abstract class ProxyCollectorPanel extends Panel implements CollectorPanelInterface
 {
     use CollectorPanelTrait;
 
@@ -14,17 +14,12 @@ abstract class ServiceCollectorPanel extends Panel implements CollectorPanelInte
     {
     }
 
-    public function start(): self
+    public function startup(): void
     {
         foreach ($this->proxies as $id => $proxy) {
             $this->container->add($id, $proxy);
         }
 
-        $this
-            ->collector
-            ->startup()
-        ;
-
-        return $this;
+        $this->collector->startup();
     }
 }
