@@ -30,11 +30,6 @@ trait CollectorPanelTrait
         $this->collector->shutdown();
     }
 
-    public function startup(): void
-    {
-        $this->collector->startup();
-    }
-
     private function addProxyService(string $serviceId, object $proxy): void 
     {        
         $this->container->add($serviceId, $proxy);
