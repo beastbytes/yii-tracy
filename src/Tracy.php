@@ -127,7 +127,7 @@ final class Tracy
             $panel = $bar->getPanel($id);
 
             if ($panel instanceof CollectorPanelInterface) {
-                $panel->getCollector()->shutdown();
+                $panel->shutdown();
             }
         }
     }
