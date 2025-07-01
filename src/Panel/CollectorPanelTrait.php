@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace BeastBytes\Yii\Tracy\Panel;
 
 use BeastBytes\Yii\Tracy\ProxyContainer;
-use Yiisoft\Yii\Debug\Collector\CollectorInterface;
 
 trait CollectorPanelTrait
 {
