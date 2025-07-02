@@ -29,7 +29,7 @@ Yii Tracy is configured using Yii’s configuration. It has the following config
 * showBar (bool) Whether to display debug bar in _**development mode**_.
 * token (string) The secret token for enabling _**development mode**_ for IP addresses. See _mode_.
 
-Set the required configuration parameters in the application `params-web.php` configuration file.
+Set the required configuration parameters in the application `params-web` configuration file.
 
 ## Disable Yii Debug
 Yii Tracy uses components of Yii Debug; to ensure Yii Tracy operates correctly, it is necessary to disable Yii Debug.
