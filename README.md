@@ -13,7 +13,7 @@ This package is a requirement of Yii Tracy Panels; install the required Yii Trac
 Yii Tracy is configured using Yii’s configuration. It has the following configuration parameters:
 * editor (string) [Tracy IDE integration](https://tracy.nette.org/en/open-files-in-ide)
 * email (null|string|string[]) Email address(es) to which send error notifications
-* logDirectory (string) Path alias to the log directory. Default: `'@runtime/logs'`
+* logDirectory (?string) Absolute path or path alias to the log directory. Default: `'@runtime/logs'`
 * logSeverity (int) Log bluescreen in production mode for this error severity.
 * mode (null|bool|string|array) The mode that Tracy is to operate in; Development or Production.
   * `Tracy\Debugger::Detect`: Tracy detects the mode; it sets _**development mode**_ is if it is running on _localhost_
