@@ -123,7 +123,7 @@ final class Tracy
         Debugger::$showBar = false; // Prevent re-rendering
 
         $bar = Debugger::getBar();
-        foreach (array_keys($this->config['panels']) as $id) {
+        foreach ($this->config['panels'] as $id) {
             $panel = $bar->getPanel($id);
 
             if ($panel instanceof CollectorPanelInterface) {
@@ -144,10 +144,10 @@ final class Tracy
         $bar = Debugger::getBar();
         $factory = new Factory($this->container);
 
-        foreach ($this->config['panels'] as $panelId) {
-            if (!array_key_exists($panelId, $this->config['panelConfig'])) {
+        foreach ($this->config['panels'] as $id) {
+            if (array_key_exists($id, $this->config['panelConfig'])) {
                 /** @var Panel $panel */
-                $panel = $factory->create($this->config['panelConfig'][$panelId])
+                $panel = $factory->create($this->config['panelConfig'][$id])
                     ->withContainer($this->container)
                 ;
 
@@ -155,7 +155,7 @@ final class Tracy
                     $panel->startup();
                 }
 
-                $bar->addPanel($panel, $panelId);
+                $bar->addPanel($panel, $id);
             }
         }
     }
