@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace BeastBytes\Yii\Tracy\Tests\Support\Panel;
 
-use BeastBytes\Yii\Tracy\Panel\ServiceCollectorPanel;
+use BeastBytes\Yii\Tracy\Panel\ProxyCollectorPanel;
 
-class TestServiceCollectorPanel extends ServiceCollectorPanel
+class TestProxyCollectorPanel extends ProxyCollectorPanel
 {
     private const ICON = <<<ICON
 <svg
@@ -34,7 +34,7 @@ ICON;
 
     protected function panelTitle(): string
     {
-        return 'Service Collector Test Panel';
+        return 'Proxy Collector Test Panel';
     }
 
     protected function tabIcon(array $parameters): string

@@ -3,7 +3,7 @@
 namespace BeastBytes\Yii\Tracy\Tests\Panel;
 
 use BeastBytes\Yii\Tracy\ProxyContainer;
-use BeastBytes\Yii\Tracy\Tests\Support\Panel\TestServiceCollectorPanel;
+use BeastBytes\Yii\Tracy\Tests\Support\Panel\TestProxyCollectorPanel;
 use BeastBytes\Yii\Tracy\Tests\Support\ProxyTestService;
 use BeastBytes\Yii\Tracy\Tests\Support\TestCollector;
 use BeastBytes\Yii\Tracy\Tests\Support\TestService;
@@ -14,10 +14,10 @@ use Psr\Container\ContainerInterface;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 use Yiisoft\View\View;
 
-class ServiceCollectorPanelTest extends TestCase
+class ProxyCollectorPanelTest extends TestCase
 {
     private const PANEL = <<<CONTENT
-<h1>Service Collector Test Panel</h1>
+<h1>Proxy Collector Test Panel</h1>
 <div class="tracy-inner">
     <div class="tracy-inner-container">
         <table><tbody>%s</tbody></table>
@@ -57,7 +57,7 @@ CONTENT;
     #[Test]
     public function panel(): void
     {
-        $panel = (new TestServiceCollectorPanel(
+        $panel = (new TestProxyCollectorPanel(
             $this->container->get(TestCollector::class),
             [
                 TestService::class => new ProxyTestService(
@@ -67,8 +67,8 @@ CONTENT;
             ]
         ))
             ->withContainer($this->container)
-            ->start()
         ;
+        $panel->startup();
 
         $iterations = rand(10, 25);
         for ($i = 0; $i < $iterations; $i++) {
