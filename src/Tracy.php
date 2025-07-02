@@ -16,6 +16,12 @@ use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\Factory;
 use Yiisoft\Factory\NotFoundException;
 
+/**
+ * @method getBar()
+ * @method getBlueScreen()
+ * @method getLogger()
+ * @method setLogger()
+ */
 final class Tracy
 {
     public const DEFAULT_CONFIG = [
