@@ -105,10 +105,13 @@ final class Tracy
 
         Debugger::enable(
             mode: $this->config['mode'],
-            logDirectory: $this
-                ->container
-                ->get('Yiisoft\Aliases\Aliases')
-                ->get($this->config['logDirectory'])
+            logDirectory: is_string($this->config['logDirectory'])
+                && str_starts_with($this->config['logDirectory'], '@')
+                ? $this
+                    ->container
+                    ->get('Yiisoft\Aliases\Aliases')
+                    ->get($this->config['logDirectory'])
+                : $this->config['logDirectory']
             ,
             email: $this->config['email']
         );
