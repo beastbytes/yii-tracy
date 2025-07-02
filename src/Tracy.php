@@ -144,17 +144,19 @@ final class Tracy
         $bar = Debugger::getBar();
         $factory = new Factory($this->container);
 
-        foreach ($this->config['panels'] as $id => $config) {
-            /** @var Panel $panel */
-            $panel = $factory->create($config)
-                ->withContainer($this->container)
-            ;
+        foreach ($this->config['panels'] as $panelId) {
+            if (!array_key_exists($panelId, $this->config['panelConfig'])) {
+                /** @var Panel $panel */
+                $panel = $factory->create($this->config['panelConfig'][$panelId])
+                    ->withContainer($this->container)
+                ;
 
-            if ($panel instanceof CollectorPanelInterface) {
-                $panel->startup();
+                if ($panel instanceof CollectorPanelInterface) {
+                    $panel->startup();
+                }
+
+                $bar->addPanel($panel, $panelId);
             }
-
-            $bar->addPanel($panel, $id);
         }
     }
 }

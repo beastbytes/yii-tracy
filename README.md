@@ -10,7 +10,11 @@ Do not directly install this package.
 This package is a requirement of Yii Tracy Panels; install the required Yii Tracy Panels.
 
 ## Configuration
-Yii-Tracy is configured using Yii’s configuration. It has the following configuration parameters:
+Yii Tracy is configured using Yii’s configuration. It has the following configuration parameters:
+* editor (string) [Tracy IDE integration](https://tracy.nette.org/en/open-files-in-ide)
+* email (null|string|string[]) Email address(es) to which send error notifications
+* logDirectory (string) Path alias to the log directory. Default: `'@runtime/logs'`
+* logSeverity (int) Log bluescreen in production mode for this error severity.
 * mode (null|bool|string|array) The mode that Tracy is to operate in; Development or Production.
   * `Tracy\Debugger::Detect`: Tracy detects the mode; it sets _**development mode**_ is if it is running on _localhost_
     (i.e. IP address 127.0.0.1 or ::1) and there is no proxy, otherwise it sets _**production mode**_.
@@ -21,12 +25,11 @@ Yii-Tracy is configured using Yii’s configuration. It has the following config
 
     **NOTE** It is highly recommended to combine IP addresses with a cookie token by specifying allowed addresses as
     `<token>@<ipAddress>`; see _token_.
-* editor (string) [Tracy IDE integration](https://tracy.nette.org/en/open-files-in-ide)
-* email (null|string|string[]) Email address(es) to which send error notifications
-* logDirectory (string) Path alias to the log directory. Default: `'@runtime/logs'`
-* logSeverity (int) Log bluescreen in production mode for this error severity.
+* panels (string[]) List of panels to show. The panels are added to the debugger in the order listed. 
 * showBar (bool) Whether to display debug bar in _**development mode**_.
-* token (string) The secret token for enabling _**development mode**_ for IP addresses. See _mode_
+* token (string) The secret token for enabling _**development mode**_ for IP addresses. See _mode_.
+
+Set the required configuration parameters in the application `params-web.php` configuration file.
 
 ## Disable Yii Debug
 Yii Tracy uses components of Yii Debug; to ensure Yii Tracy operates correctly, it is necessary to disable Yii Debug.

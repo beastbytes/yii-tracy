@@ -21,6 +21,7 @@ return [
         'emailSnooze' => null,
         'logDirectory' => '@runtime/logs',
         'logSeverity' => 0,
+        'panelConfig' => [],
         'panels' => [],
     ],
     'yiisoft/debug' => [
