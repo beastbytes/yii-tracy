@@ -25,7 +25,8 @@ Yii Tracy is configured using Yii’s configuration. It has the following config
 
     **NOTE** It is highly recommended to combine IP addresses with a cookie token by specifying allowed addresses as
     `<token>@<ipAddress>`; see _token_.
-* panels (string[]) List of panels to show. The panels are added to the debugger in the order listed. 
+* panelConfig (array) Panel configurations indexed by panel ID. Panel packages contain default configuration.
+* panels (string[]) IDs of panels to show. The panels are added to the debugger in the order listed. 
 * showBar (bool) Whether to display debug bar in _**development mode**_.
 * token (string) The secret token for enabling _**development mode**_ for IP addresses. See _mode_.
 
