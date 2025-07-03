@@ -25,6 +25,11 @@ trait CollectorPanelTrait
         return $this->collector->getSummary();
     }
 
+    public function startup(): void
+    {
+        $this->collector->startup();
+    }
+
     public function shutdown(): void
     {
         $this->collector->shutdown();

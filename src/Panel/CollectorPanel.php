@@ -6,7 +6,7 @@ namespace BeastBytes\Yii\Tracy\Panel;
 
 use Yiisoft\Yii\Debug\Collector\CollectorInterface;
 
-abstract class EventCollectorPanel extends Panel implements CollectorPanelInterface
+abstract class CollectorPanel extends Panel implements CollectorPanelInterface
 {
     use CollectorPanelTrait;
 

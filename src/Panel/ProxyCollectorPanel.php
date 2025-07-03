@@ -6,12 +6,11 @@ namespace BeastBytes\Yii\Tracy\Panel;
 
 use Yiisoft\Yii\Debug\Collector\CollectorInterface;
 
-abstract class ProxyCollectorPanel extends Panel implements CollectorPanelInterface
+abstract class ProxyCollectorPanel extends CollectorPanel
 {
-    use CollectorPanelTrait;
-
-    public function __construct(protected CollectorInterface $collector, private readonly array $proxies)
+    public function __construct(CollectorInterface $collector, private readonly array $proxies)
     {
+        parent::__construct($collector);
     }
 
     public function startup(): void
@@ -20,6 +19,6 @@ abstract class ProxyCollectorPanel extends Panel implements CollectorPanelInterf
             $this->container->add($id, $proxy);
         }
 
-        $this->collector->startup();
+        parent::startup();
     }
 }
