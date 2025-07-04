@@ -16,10 +16,10 @@ abstract class Panel implements IBarPanel, ViewContextInterface
 
     abstract public function getViewPath(): string;
     abstract protected function panelParameters(): array;
-    abstract protected function panelTitle(): string;
+    abstract protected function panelTitle(): array;
     abstract protected function tabIcon(array $parameters): string;
     abstract protected function tabParameters(): array;
-    abstract protected function tabTitle(): string;
+    abstract protected function tabTitle(): array;
     
     public function getPanel()
     {
