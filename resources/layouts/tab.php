@@ -2,10 +2,14 @@
 /**
  * @var string $content
  * @var string $icon
- * @var string $title
+ * @var array $title
+ * @var TranslatorInterface $translator
  */
+
+use Yiisoft\Translator\TranslatorInterface;
+
 ?>
-<span title="<?= $title ?>">
+<span title="<?= $translator->translate($title['id'], category: $title['category']) ?>">
     <?= $icon ?>
     <span class="tracy-label">
         <?= $content ?>

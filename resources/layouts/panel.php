@@ -1,8 +1,11 @@
 <?php
 /**
  * @var string $content
- * @var string $title
+ * @var array $title
+ * @var TranslatorInterface $translator
  */
+
+use Yiisoft\Translator\TranslatorInterface;
 ?>
 
 
@@ -12,7 +15,7 @@
     }
 </style>
 
-<h1><?= $title ?></h1>
+<h1><?= $translator->translate($title['id'], category: $title['category']) ?></h1>
 <div class="tracy-inner">
     <div class="tracy-inner-container">
         <?= $content ?>
