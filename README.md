@@ -7,10 +7,11 @@ into [Yii3](https://www.yiiframework.com/).
 ## Installation
 Do not directly install this package.
 
-This package is a requirement of Yii Tracy Panels; install the required Yii Tracy Panels.
+Install the [Yii Tracy Panels](#panels) as required.
 
 ## Configuration
-Yii Tracy is configured using Yii’s configuration. It has the following configuration parameters:
+Yii Tracy is configured using Yii’s configuration. It has the following configuration parameters
+defined in the `beastbytes/yii-tracy` section of `params-web.php`:
 * editor (string) [Tracy IDE integration](https://tracy.nette.org/en/open-files-in-ide)
 * email (null|string|string[]) Email address(es) to which send error notifications
 * logDirectory (?string) Absolute path or path alias to the log directory. Default: `'@runtime/logs'`
@@ -30,7 +31,14 @@ Yii Tracy is configured using Yii’s configuration. It has the following config
 * showBar (bool) Whether to display debug bar in _**development mode**_.
 * token (string) The secret token for enabling _**development mode**_ for IP addresses. See _mode_.
 
+_**Note**_: A panel must be configured in `panelConfig` and listed in `panels` to be enabled.
+
 Set the required configuration parameters in the application `params-web` configuration file.
+
+## Internationalisation
+Yii Tracy supports internationalisation of tabs and panels.
+To ensure that this works as expected an implementation of `Yiisoft\Translator\TranslatorInteface`
+must be present in application views.
 
 ## Disable Yii Debug
 Yii Tracy uses components of Yii Debug; to ensure Yii Tracy operates correctly, it is necessary to disable Yii Debug.
@@ -62,22 +70,24 @@ The end of the application entry script will be something like:
 
 ## Panels
 The following panels are available:
+* [Assets](https://github.com/beastbytes/yii-tracy-panel-assets) Provides information about Asset Bundles on the page.
 * [Database](https://github.com/beastbytes/yii-tracy-panel-database) Provides information about the database connection and executed queries.
-* [Request](https://github.com/beastbytes/yii-tracy-panel-request) Provides information about the current request.
 * [Route](https://github.com/beastbytes/yii-tracy-panel-route) Provides information about the current route.
-* [Session](https://github.com/beastbytes/yii-tracy-panel-session) Provides information about the session.
 * [User](https://github.com/beastbytes/yii-tracy-panel-user) Provides information about the current user.
 * [View](https://github.com/beastbytes/yii-tracy-panel-view) Provides information about the rendered view.
 
-### User Defined Panel
+Add the required panels to the `require-dev` section of the application `composer.json`.
+This package is installed as a dependency.
+
+### Custom Panels
+Custom panels can be added to Yii Tracy. The information below gives details of how to do this.
+Also see [Tracy Bar Extensions](https://tracy.nette.org/en/extensions) for more information and examine the existing panels for example code.
+
 #### Panel Class
 The Panel class must extend either `BeastBytes\Yii\Tracy\Panel\Panel`
 or one of the collector panel classes if the panel uses a `Yiisoft\Yii\Debug\Collector\CollectorInterface`.
 
 All panels have access to Yii's Dependency Injection container through the `$container` property.
-
-See [Tracy Bar Extensions](https://tracy.nette.org/en/extensions) for more information
-and examine the package's panels for example code.
 
 The Panel class must implement the following methods:
 ##### getViewPath(): string
@@ -92,35 +102,110 @@ BeastBytes\Yii\Tracy\ViewTrait provides this method for panels that follow the s
 
 Returns view parameters for the panel view as array<string: mixed>;
 
-##### panelTitle(): string
+##### panelTitle(): array
 **Visibility**: _protected_
 
-Returns the panel title.
+Returns array{id: string, category: int} where:
+* id: message id for translation
+* category: message translation category
+
+_**Tip**_ Define a public constant `MESSAGE_CATEGORY = tracy-<panel-id>`
 
 ##### tabIcon(array $parameters): string
 **Visibility**: _protected_
 
 Returns an SVG icon for the debugger tab view.
 
-The method takes the tab parameters as a parameter to allow the icon to reflect the state of the tab;
-e.g. whether any database queries were executed.
+The method takes the tab parameters as an argument to allow the icon to reflect the state of the tab.
 
 #### tabParameters(): array
 **Visibility**: _protected_
 
 Returns view parameters for the debugger tab view as array<string: mixed>;
 
-##### tabTitle(): string
+##### tabTitle(): array
 **Visibility**: _protected_
 
-Returns the title for the debugger tab.
+Returns array{id: string, category: int} where:
+* id: message id for translation
+* category: message translation category
+
+_**Tip**_ Define a public constant `MESSAGE_CATEGORY = tracy-<panel-id>`
 
 #### Views
 The panel must implement two views, _tab_ and _panel_; they are _php_ templates.
 The views need only render the tab/panel content;
 Yii Tracy provides layouts for both tab and panel to decorate the content.
 
-Rendering is done using Yii\View\View.
+To correctly support internationalisation and make the panel fully contained, it is recommended to:
+* Define a public constant in the Panel class that defines the message translation category
+```php
+public const MESSAGE_CATEGORY = 'tracy-<panel-id>';
+```
+where `<panel-id>` is the panel id, and the prefix `tracy-` avoids name collisions
+* Place the following line at the start of the tab and panel views:
+```php
+$translator = $translator->withDefaultCategory(Panel::MESSAGE_CATEGORY);
+```
+* Use message ids of the form `<panel-id>.type.name`.
+Suggested _types_ are 'heading', 'title', 'value'. `type` can be omitted for body text.
+
+#### Configuration
+Two configuration files are required:
+* di-web.php - defines the message translation category
+* params-web - defines the panel
+
+and references to them in `composer.json`.
+
+##### di-web.php
+```php
+use Fully\Qualified\Namespace\For\Panel;
+use Yiisoft\Translator\CategorySource;
+use Yiisoft\Translator\IntlMessageFormatter;
+use Yiisoft\Translator\Message\Php\MessageSource;
+
+$category = Panel::MESSAGE_CATEGORY;
+$messageSource = dirname(__DIR__) . '/resources/messages';
+
+return [
+    "translation.$category" => [
+        'definition' => static function() use ($category, $messageSource)  {
+            return new CategorySource(
+                $category,
+                new MessageSource($messageSource),
+                new IntlMessageFormatter(),
+            );
+        },
+        'tags' => ['translation.categorySource'],
+    ],
+];
+````
+
+##### params-web.php
+```php
+return [
+    'beastbytes/yii-tracy' => [
+        'panelConfig' => [
+            '<panel-id>' => [
+                'class' => <FQCN>,
+                // Additional panel definition
+            ],
+        ],
+    ],
+];
+```
+
+##### composer.json
+Add references to `di-web.php` and `params.php` in the `extra` section of `composer.json`:
+```json
+  "extra": {
+    // Additional 'extra' sections
+    "config-plugin": {
+      "di-web": "di-web.php",
+      "params-web": "params-web.php"
+    }
+  }
+```
 
 ## License
 The BeastBytes Yii Tracy package is free software. It is released under the terms of the BSD License.
