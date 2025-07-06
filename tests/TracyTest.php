@@ -6,15 +6,27 @@ namespace BeastBytes\Yii\Tracy\Tests;
 
 use BeastBytes\Yii\Tracy\Tests\Support\Panel\TestPanel;
 use BeastBytes\Yii\Tracy\Tracy;
-use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use Tracy\Bar;
 use Tracy\IBarPanel;
 use Yiisoft\Test\Support\Container\SimpleContainer;
+use Yiisoft\View\View;
 
 class TracyTest extends TestCase
 {
+    private ContainerInterface $container;
+
+    #[Before]
+    public function setUp(): void
+    {
+        $this->container = new SimpleContainer([
+            View::class => new View(),
+        ]);
+    }
+
     #[Test]
     public function tracy(): void
     {
@@ -24,7 +36,7 @@ class TracyTest extends TestCase
                 'showBar' => true,
 
             ],
-            new SimpleContainer()
+            $this->container
         );
 
         /** @var Bar $bar */
@@ -69,7 +81,7 @@ class TracyTest extends TestCase
             ],
         ];
 
-        $tracy = new Tracy($config, new SimpleContainer());
+        $tracy = new Tracy($config, $this->container);
         $tracy->startup();
 
         /** @var Bar $bar */

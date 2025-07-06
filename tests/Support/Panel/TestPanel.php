@@ -8,6 +8,8 @@ use BeastBytes\Yii\Tracy\Panel\Panel;
 
 class TestPanel extends Panel
 {
+    public const MESSAGE_CATEGORY = 'tracy-panel';
+
     private const ICON = <<<ICON
 <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -30,9 +32,12 @@ ICON;
         return [];
     }
 
-    protected function panelTitle(): string
+    protected function panelTitle(): array
     {
-        return 'Test Panel';
+        return [
+            'id' => 'Test Panel',
+            'category' => self::MESSAGE_CATEGORY
+        ];
     }
 
     protected function tabIcon(array $parameters): string
@@ -45,9 +50,12 @@ ICON;
         return [];
     }
 
-    protected function tabTitle(): string
+    protected function tabTitle(): array
     {
-        return 'Test Panel Tab';
+        return [
+            'id' => 'Test Panel Tab',
+            'category' => self::MESSAGE_CATEGORY
+        ];
     }
 
     public function getViewPath(): string

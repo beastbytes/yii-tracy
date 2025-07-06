@@ -5,7 +5,13 @@ declare(strict_types=1);
 /**
  * @var array $collected
  */
-?>
-<table><tbody><?php foreach ($collected as $name => $count):
-    printf("<tr><td>%s</td><td>%d</td></tr>", $name, $count);
-endforeach; ?></tbody></table>
+
+
+use BeastBytes\Yii\Tracy\Helper;
+
+$rows = [];
+foreach ($collected as $name => $count) {
+    $rows[] = [$name, $count];
+}
+
+echo Helper::table($rows);

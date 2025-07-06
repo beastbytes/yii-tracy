@@ -8,6 +8,8 @@ use BeastBytes\Yii\Tracy\Panel\ProxyCollectorPanel;
 
 class TestProxyCollectorPanel extends ProxyCollectorPanel
 {
+    public const MESSAGE_CATEGORY = 'tracy-panel';
+
     private const ICON = <<<ICON
 <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -32,9 +34,12 @@ ICON;
         ];
     }
 
-    protected function panelTitle(): string
+    protected function panelTitle(): array
     {
-        return 'Proxy Collector Test Panel';
+        return [
+            'id' => 'Proxy Collector Test Panel',
+            'category' => self::MESSAGE_CATEGORY
+        ];
     }
 
     protected function tabIcon(array $parameters): string
@@ -49,9 +54,12 @@ ICON;
         ];
     }
 
-    protected function tabTitle(): string
+    protected function tabTitle(): array
     {
-        return 'Service Collection Panel Tab';
+        return [
+            'id' => 'Proxy Collector Panel Tab',
+            'category' => self::MESSAGE_CATEGORY
+        ];
     }
 
     public function getViewPath(): string
