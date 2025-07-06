@@ -7,11 +7,5 @@
  */
 
 use Yiisoft\Translator\TranslatorInterface;
-
 ?>
-<span title="<?= $translator->translate($title['id'], category: $title['category']) ?>">
-    <?= $icon ?>
-    <span class="tracy-label">
-        <?= $content ?>
-    </span>
-</span>
+<span title="<?= $translator->translate($title['id'], category: $title['category']) ?>"><?= $icon ?><span class="tracy-label"><?= $content ?></span></span>
