@@ -12,7 +12,7 @@
   "license": "BSD-3-Clause",
   "require": {
     "php": "^8.1",
-    "psr/container": "2.0",
+    "psr/container": "^2.0",
     "tracy/tracy": "^3.0-dev",
     "yiisoft/aliases": "^3.0",
     "yiisoft/factory": "^1.0",
