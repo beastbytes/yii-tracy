@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace BeastBytes\Yii\Tracy\Panel;
 
-use BeastBytes\Yii\Tracy\ProxyContainer;
+use BeastBytes\Yii\Tracy\ContainerProxy;
 
 trait CollectorPanelTrait
 {
-    private ?ProxyContainer $proxyContainer = null;
+    private ?ContainerProxy $proxyContainer = null;
     
     public function getCollected(): array
     {

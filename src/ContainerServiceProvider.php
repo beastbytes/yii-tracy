@@ -12,7 +12,7 @@ final class ContainerServiceProvider implements ServiceProviderInterface
     public function getDefinitions(): array
     {
         return [
-            ContainerInterface::class => ProxyContainer::class
+            ContainerInterface::class => ContainerProxy::class
         ];
     }
 

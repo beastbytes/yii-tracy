@@ -2,7 +2,7 @@
 
 namespace BeastBytes\Yii\Tracy\Tests;
 
-use BeastBytes\Yii\Tracy\ProxyContainer;
+use BeastBytes\Yii\Tracy\ContainerProxy;
 use BeastBytes\Yii\Tracy\Tests\Support\ProxyTestService;
 use BeastBytes\Yii\Tracy\Tests\Support\TestCollector;
 use BeastBytes\Yii\Tracy\Tests\Support\TestService;
@@ -20,7 +20,7 @@ class ProxyContainerTest extends TestCase
     #[Before]
     public function setUp(): void
     {
-        $this->container = new ProxyContainer(
+        $this->container = new ContainerProxy(
             new SimpleContainer([
                 TestCollector::class => new TestCollector(),
                 TestService::class => new TestService(),

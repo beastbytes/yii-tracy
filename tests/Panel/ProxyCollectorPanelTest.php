@@ -2,7 +2,7 @@
 
 namespace BeastBytes\Yii\Tracy\Tests\Panel;
 
-use BeastBytes\Yii\Tracy\ProxyContainer;
+use BeastBytes\Yii\Tracy\ContainerProxy;
 use BeastBytes\Yii\Tracy\Tests\Support\Panel\TestProxyCollectorPanel;
 use BeastBytes\Yii\Tracy\Tests\Support\ProxyTestService;
 use BeastBytes\Yii\Tracy\Tests\Support\TestCollector;
@@ -35,7 +35,7 @@ HTML;
     #[Before]
     public function setUp(): void
     {
-        $this->container = new ProxyContainer(
+        $this->container = new ContainerProxy(
             new SimpleContainer([
                 TestCollector::class => new TestCollector(),
                 TestService::class => new TestService(),
