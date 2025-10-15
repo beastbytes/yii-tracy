@@ -13,7 +13,7 @@ use Psr\Container\ContainerInterface;
 use Yiisoft\Test\Support\Container\SimpleContainer;
 use Yiisoft\View\View;
 
-class ProxyContainerTest extends TestCase
+class ContainerProxyTest extends TestCase
 {
     private ContainerInterface $container;
 
